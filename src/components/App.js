@@ -5,7 +5,7 @@ import Section from "./Section";
 import Contacts from "./Contact/Contacts";
 import AddContactForm from "./ContactForm/AddContactForm";
 import ContactFilter from "./ContactFilter";
-import data from "./Data/fakeData.json";
+//import data from "./Data/fakeData.json";
 
 const filterContacts = (contacts, filter) => {
 	return contacts.filter((contact) =>
@@ -15,7 +15,7 @@ const filterContacts = (contacts, filter) => {
 
 export default class App extends Component {
 	state = {
-		contacts: [...data],
+		contacts: [],
 		filter: "",
 	};
 
@@ -47,12 +47,24 @@ export default class App extends Component {
 		}));
 	};
 
+	componentDidUpdate(prevProps, prevState) {
+		localStorage.setItem("contact", JSON.stringify(this.state.contacts));
+	}
+
+	componentDidMount() {
+		const contact = localStorage.getItem("contact");
+
+		if (contact) {
+			const convrtArr = JSON.parse(contact);
+			this.setState(() => ({
+				contacts: [...convrtArr],
+			}));
+		}
+	}
+
 	render() {
 		const { contacts, filter } = this.state;
-
 		const filteredContacts = filterContacts(contacts, filter);
-
-		console.log(filter);
 
 		return (
 			<>
